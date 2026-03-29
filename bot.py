@@ -6,10 +6,8 @@ import requests
 # ==============================
 # CONFIG
 # ==============================
-#TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
-#CHAT_ID = os.environ.get("CHAT_ID")
-TELEGRAM_TOKEN = "7547687446:AAHHGBSrxjr5jXV0PtKWIN5GHrU-cMg5pfE"
-CHAT_ID = "7445785598"
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
+CHAT_ID = os.environ.get("CHAT_ID")
 
 # ==============================
 # LOAD SYMBOLS
