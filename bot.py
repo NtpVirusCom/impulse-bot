@@ -151,7 +151,7 @@ def send_telegram(messages):
         #text = f"📊 *Watchlist Impulse MACD ({batch_num}/{total_batches}):*\n\n"
         #text += "\n\n".join(batch)
 
-        text = f"📊 *Watchlist Impulse MACD ({batch_num}/{total_batches}):*\n"
+        text = f"📊 *Watchlist Impulse MACD by Railway.com ({batch_num}/{total_batches}):*\n"
         text += "\n".join(batch)
 
         requests.post(
