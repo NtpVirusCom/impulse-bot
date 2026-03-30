@@ -1,10 +1,13 @@
+# ============================v.13==
+# Imports
+# ==============================
 import yfinance as yf
 import pandas as pd
 import numpy as np
 import requests
 import os
 
-# ============================v.12==
+# ==============================
 # CONFIG
 # ==============================
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
