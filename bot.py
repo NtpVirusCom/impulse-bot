@@ -4,7 +4,7 @@ import numpy as np
 import requests
 import os
 
-# ==============================
+# ============================v.9==
 # CONFIG
 # ==============================
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
