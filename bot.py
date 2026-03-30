@@ -4,22 +4,46 @@ import numpy as np
 import requests
 import os
 
-# ============================v.9==
+# ============================v.12==
 # CONFIG
 # ==============================
-TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
-CHAT_ID = os.environ.get("CHAT_ID")
+#TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
+#CHAT_ID = os.environ.get("CHAT_ID")
+TELEGRAM_TOKEN = "7547687446:AAHHGBSrxjr5jXV0PtKWIN5GHrU-cMg5pfE"
+CHAT_ID = "7445785598"
 
 # ==============================
 # LOAD SYMBOLS
 # ==============================
+def get_symbols_from_google_sheet():
+    url = "https://docs.google.com/spreadsheets/d/1r9Zh_7bS94NYI6XKA7Lm7YWK5WQWYw0wopcve4DJuHw/export?format=csv"
+
+    df = pd.read_csv(url)
+
+    # ใช้คอลัมน์แรก (Column A)
+    col = df.columns[0]
+
+    symbols = (
+        df[col]
+        .dropna()
+        .astype(str)
+        .str.strip()
+        .str.upper()
+        .str.replace(".", "-", regex=False)
+        .unique()
+        .tolist()
+    )
+
+    print(f"Google Sheet symbols: {len(symbols)}")
+    return symbols
+
 def get_sp500():
     url = "https://datahub.io/core/s-and-p-500-companies/r/constituents.csv"
     df = pd.read_csv(url)
 
     col = "Symbol" if "Symbol" in df.columns else df.columns[0]
 
-    return (
+    symbols = (
         df[col]
         .dropna()
         .astype(str)
@@ -28,6 +52,9 @@ def get_sp500():
         .unique()
         .tolist()
     )
+
+    print(f"S&P500 symbols: {len(symbols)}")   # ✅ เพิ่มบรรทัดนี้
+    return symbols
 
 
 def get_nasdaq100():
@@ -36,7 +63,7 @@ def get_nasdaq100():
 
     col = "Ticker" if "Ticker" in df.columns else df.columns[0]
 
-    return (
+    symbols = (
         df[col]
         .dropna()
         .astype(str)
@@ -46,15 +73,60 @@ def get_nasdaq100():
         .tolist()
     )
 
+    print(f"NASDAQ100 symbols: {len(symbols)}")  # ✅ เพิ่มบรรทัดนี้
+    return symbols
+
+
+#def get_symbols():
+#    symbols = list(set(get_sp500() + get_nasdaq100()))
+#
+#    blacklist = {"BF-B"}
+#    symbols = [s for s in symbols if s not in blacklist]
+#
+#    symbols.sort()
+#    print(f"Total symbols: {len(symbols)}")
+#    return symbols
+
+#def get_symbols():
+#    symbols = list(set(
+#        get_sp500() +
+#        get_nasdaq100() +
+#        get_symbols_from_google_sheet()
+#    ))
+#
+#    blacklist = {"BF-B"}
+#    symbols = [s for s in symbols if s not in blacklist]
+#
+#    symbols.sort()
+#    print(f"Total symbols: {len(symbols)}")
+#   return symbols
 
 def get_symbols():
-    symbols = list(set(get_sp500() + get_nasdaq100()))
+    sp500 = set(get_sp500())
+    nasdaq100 = set(get_nasdaq100())
+    google = set(get_symbols_from_google_sheet())
+
+    # ===== OVERLAP =====
+    sp500_nasdaq = sp500 & nasdaq100
+    sp500_google = sp500 & google
+    nasdaq_google = nasdaq100 & google
+    all_three = sp500 & nasdaq100 & google
+
+    print("\n===== DUPLICATE SYMBOLS =====")
+    print(f"S&P500 & NASDAQ100: {len(sp500_nasdaq)}")
+    print(f"S&P500 & Google Sheet: {len(sp500_google)}")
+    print(f"NASDAQ100 & Google Sheet: {len(nasdaq_google)}")
+    print(f"All 3 overlap: {len(all_three)}")
+
+    # ===== รวมทั้งหมด =====
+    symbols = list(sp500 | nasdaq100 | google)
 
     blacklist = {"BF-B"}
     symbols = [s for s in symbols if s not in blacklist]
 
     symbols.sort()
     print(f"Total symbols: {len(symbols)}")
+
     return symbols
 
 
